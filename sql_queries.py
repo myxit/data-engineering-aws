@@ -8,106 +8,111 @@ config.read('dwh.cfg')
 # DROP TABLES
 
 staging_events_table_drop = "DROP TABLE IF EXISTS staging_events"
-staging_songs_table_drop = "DROP TABLE IF EXISTS "
+staging_songs_table_drop = "DROP TABLE IF EXISTS staging_songs"
 songplay_table_drop = "DROP TABLE IF EXISTS songplay"
-user_table_drop = "DROP TABLE IF EXISTS user"
-song_table_drop = "DROP TABLE IF EXISTS song"
-artist_table_drop = "DROP TABLE IF EXISTS artist"
+user_table_drop = "DROP TABLE IF EXISTS users"
+song_table_drop = "DROP TABLE IF EXISTS songs"
+artist_table_drop = "DROP TABLE IF EXISTS artists"
 time_table_drop = "DROP TABLE IF EXISTS time"
 
 # CREATE TABLES
 
 staging_events_table_create= ("""
     CREATE TABLE staging_events (
-        artist VARCHAR(64) NOT NULL,
-        auth VARCHAR(64) NULL,
-        first_name VARCHAR(32) NOT NULL,
-        gender VARCHAR(1) NOT NULL,
-        item_in_session INTEGER NOT NULL,
-        last_name VARCHAR(32) NOT NULL,
-        length REAL NOT NULL,
-        level VARCHAR(8) NOT NULL,
-        location VARCHAR(64) NOT NULL,
-        method VARCHAR(7) NOT NULL,
-        page VARCHAR(32) NOT NULL,
-        registration BIGINT NOT NULL,
-        session_id INTEGER NOT NULL,
-        song VARCHAR(64) NOT NULL,
-        status INTEGER NOT NULL,
-        ts BIGINT NOT NULL,
-        user_agent VARCHAR(512),
-        user_id INTEGER NOT NULL
+        artist              TEXT NOT NULL,
+        auth                TEXT NULL,
+        first_name          TEXT NOT NULL,
+        gender              VARCHAR(1) NOT NULL,
+        item_in_session     INTEGER NOT NULL,
+        last_name           TEXT NOT NULL,
+        length              REAL NOT NULL,
+        level               TEXT NOT NULL,
+        location            TEXT NOT NULL,
+        method              TEXT NOT NULL,
+        page                TEXT NOT NULL,
+        registration        BIGINT NOT NULL,
+        session_id          BIGINT NOT NULL,
+        song                TEXT NOT NULL,
+        status              INTEGER NOT NULL,
+        ts                  BIGINT NOT NULL,
+        user_agent          TEXT,
+        user_id             INTEGER NOT NULL
     )
 """)
 
 staging_songs_table_create = ("""
     CREATE TABLE staging_songs (
-        artist_id VARCHAR(18) NOT NULL,
-        artist_latitude FLOAT,
-        artist_longitude FLOAT,
-        artist_location VARCHAR(64) NULL,
-        artist_name VARCHAR(64) NOT NULL,
-        song_id VARCHAR(18) NOT NULL,
-        title VARCHAR(64) NOT NULL,
-        duration REAL NOT NULL,
-        year INTEGER NOT NULL
+        artist_id           TEXT NOT NULL,
+        artist_latitude     FLOAT,
+        artist_longitude    FLOAT,
+        artist_location     TEXT NULL,
+        artist_name         TEXT NOT NULL,
+        song_id             TEXT NOT NULL,
+        title               TEXT NOT NULL,
+        duration            REAL NOT NULL,
+        year                INTEGER NOT NULL
     )
 """)
 
 songplay_table_create = ("""
     CREATE TABLE songplay (
-        songplay_id IDENTITY(0,1),
-        start_time, 
-        user_id INTEGER NOT NULL, 
-        level, 
-        song_id INTEGER NOT NULL,
-        artist_id INTEGER NOT NULL,
-        session_id INTEGER NOT NULL,
-        location VARCHAR(64) NOT NULL,
-        user_agent VARCHAR(512)
-    ) DISTSTYLE key;
+        songplay_id BIGINT IDENTITY(0,1),
+        start_time  BIGINT NOT NULL, /* Timestamp */ 
+        user_id     BIGINT NOT NULL, 
+        level       TEXT, 
+        song_id     BIGINT NOT NULL,
+        artist_id   BIGINT NOT NULL,
+        session_id  INTEGER NOT NULL,
+        location    VARCHAR(64) NOT NULL,
+        user_agent  VARCHAR(512),
+        PRIMARY KEY(songplay_id)
+    ) DISTSTYLE AUTO;
 """)
 
 user_table_create = ("""
-    CREATE TABLE user (
-        user_id INTEGER NOT NULL,
-        first_name VARCHAR(32) NOT NULL,
-        last_name VARCHAR(32) NOT NULL,
-        gender VARCHAR(1) NOT NULL,
-        level VARCHAR(8) NOT NULL
+    CREATE TABLE users (
+        user_id     BIGINT IDENTITY(0,1),
+        first_name  VARCHAR(32) NOT NULL,
+        last_name   VARCHAR(32) NOT NULL,
+        gender      VARCHAR(1) NOT NULL,
+        level       VARCHAR(8) NOT NULL,
+        PRIMARY KEY(user_id)
     ) DISTSTYLE AUTO;
 """)
 
 song_table_create = ("""
-    CREATE TABLE song (
-        song_id INTEGER NOT NULL,
-        title, 
-        artist_id INTEGER NOT NULL,
-        year INTEGER NOT NULL,
-        duration INTEGER NOT NULL
-    )
+    CREATE TABLE songs (
+        song_id     BIGINT IDENTITY(0,1),
+        title       TEXT, 
+        artist_id   BIGINT NOT NULL,
+        year        INTEGER NOT NULL,
+        duration    REAL NOT NULL,
+        PRIMARY KEY(song_id)
+    ) DISTSTYLE AUTO;
 """)
 
 artist_table_create = ("""
-    CREATE TABLE artist (
-        artist_id INTEGER NOT NULL,
-        name, 
-        location, 
-        latitude, 
-        longitude
+    CREATE TABLE artists (
+        artist_id   BIGINT IDENTITY(0,1),
+        name        TEXT NOT NULL, 
+        location    TEXT NOT NULL, 
+        latitude    FLOAT, 
+        longitude   FLOAT,
+        PRIMARY KEY(artist_id)
     ) DISTSTYLE AUTO;
 """)
 
 time_table_create = ("""
     CREATE TABLE time (
-        start_time INTEGER NOT NULL, #<< TODO: check
-        hour INTEGER NOT NULL,
-        day INTEGER NOT NULL,
-        week INTEGER NOT NULL,
-        month INTEGER NOT NULL,
-        year INTEGER NOT NULL,
-        weekday INTEGER NOT NULL
-    )
+        start_time  BIGINT NOT NULL, /* Timestamp */ 
+        hour        INTEGER NOT NULL,
+        day         INTEGER NOT NULL,
+        week        INTEGER NOT NULL,
+        month       INTEGER NOT NULL,
+        year        INTEGER NOT NULL, /* DISTKEY, if DISTSTYLE KEY */
+        weekday     INTEGER NOT NULL,
+        PRIMARY KEY(start_time)
+    ) DISTSTYLE AUTO;
 """)
 
 
