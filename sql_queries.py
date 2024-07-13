@@ -19,38 +19,38 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 
 staging_events_table_create= ("""
     CREATE TABLE staging_events (
-        artist              TEXT NOT NULL,
-        auth                TEXT NULL,
-        first_name          TEXT NOT NULL,
-        gender              VARCHAR(1) NOT NULL,
-        item_in_session     INTEGER NOT NULL,
-        last_name           TEXT NOT NULL,
-        length              REAL NOT NULL,
-        level               TEXT NOT NULL,
-        location            TEXT NOT NULL,
-        method              TEXT NOT NULL,
-        page                TEXT NOT NULL,
-        registration        BIGINT NOT NULL,
-        session_id          BIGINT NOT NULL,
-        song                TEXT NOT NULL,
-        status              INTEGER NOT NULL,
-        ts                  BIGINT NOT NULL,
+        artist              TEXT,
+        auth                TEXT,
+        first_name          TEXT,
+        gender              VARCHAR(1),
+        item_in_session     INTEGER,
+        last_name           TEXT,
+        length              REAL,
+        level               TEXT,
+        location            TEXT,
+        method              TEXT,
+        page                TEXT,
+        registration        BIGINT,
+        session_id          BIGINT,
+        song                TEXT,
+        status              INTEGER,
+        ts                  BIGINT,
         user_agent          TEXT,
-        user_id             INTEGER NOT NULL
+        user_id             INTEGER
     )
 """)
 
 staging_songs_table_create = ("""
     CREATE TABLE staging_songs (
-        artist_id           TEXT NOT NULL,
+        artist_id           TEXT,
         artist_latitude     FLOAT,
         artist_longitude    FLOAT,
-        artist_location     TEXT NULL,
-        artist_name         TEXT NOT NULL,
-        song_id             TEXT NOT NULL,
-        title               TEXT NOT NULL,
-        duration            REAL NOT NULL,
-        year                INTEGER NOT NULL
+        artist_location     TEXT,
+        artist_name         TEXT,
+        song_id             TEXT,
+        title               TEXT,
+        duration            REAL,
+        year                INTEGER
     )
 """)
 
@@ -120,9 +120,9 @@ time_table_create = ("""
 
 staging_events_copy = ("""
 COPY staging_events 
-    FROM '{}' 
-    CREDENTIALS 'aws_iam_role={}'
-    JSON '{}'
+    FROM {}
+    IAM_ROLE {}
+    JSON {}
     REGION 'us-west-2'
 """).format(
     config.get('S3', 'LOG_DATA'), 
@@ -132,9 +132,9 @@ COPY staging_events
 
 staging_songs_copy = ("""
 COPY staging_songs 
-    FROM '{}' 
-    CREDENTIALS 'aws_iam_role={}'
-    JSON auto
+    FROM {}
+    IAM_ROLE {}
+    JSON 'auto'
     REGION 'us-west-2'
 """).format(
     config.get('S3', 'SONG_DATA'), 
@@ -161,5 +161,6 @@ time_table_insert = ("""
 
 create_table_queries = [staging_events_table_create, staging_songs_table_create, songplay_table_create, user_table_create, song_table_create, artist_table_create, time_table_create]
 drop_table_queries = [staging_events_table_drop, staging_songs_table_drop, songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
-copy_table_queries = [staging_events_copy, staging_songs_copy]
+# copy_table_queries = [staging_events_copy,]
+copy_table_queries = [staging_songs_copy]
 insert_table_queries = [songplay_table_insert, user_table_insert, song_table_insert, artist_table_insert, time_table_insert]
