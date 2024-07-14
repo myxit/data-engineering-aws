@@ -6,6 +6,7 @@ This project sets up an ETL pipeline using AWS Redshift for data warehousing. Th
  - `dwg.example.cfg`. Configuration file template for storing credentials and settings for the `etl.py` script.
  - `etl.py`. This script handles the Extract, Transform, Load (ETL) process. It extracts data from S3, stages it in Redshift, and then processes it into the analytics tables. The goal is to ensure data integrity and optimize the loading process for large datasets.
  - `sql_queries.py`. This script contains the SQL statements required for the ETL process. It includes queries for creating tables, inserting data, and performing the necessary transformations. These queries are imported and utilized in the create_table.py and etl.py scripts.
+  - `generate_report_examples.py`. The script generates report examples and places them into the [reports_examples folder](./reports_examples/) might be used for analytics.
 
 ### Project Structure
 The project is organized to facilitate a seamless ETL process, from data extraction to final analytics-ready tables. Here’s a high-level overview of the steps involved:
@@ -18,20 +19,15 @@ The project is organized to facilitate a seamless ETL process, from data extract
 
 # Running the Pipeline
 To run the ETL pipeline, follow these steps:
-1. Make sure have AWS Redshift cluster setup and run.
+1. Make sure have AWS Redshift cluster setup and run. **NOTE**: setup implies correct IAM role for the cluster so it can access udacity s3 buckets.
 2. Ensure you have python version 3.11.4 (other might also work).
 3. Create `dwh.cfg` file from `dwg.example.cfg` template and set your AWS credentials and Redshift configuration settings as needed.
 4. Run `etl.py` to load and transform the data from S3 into your Redshift tables.
 
-# Design Considerations
- - **Scalability**: The star schema design helps in scaling the data warehouse, enabling efficient querying even with large datasets.
- - **Modularity**: Separating the SQL queries into sql_queries.py promotes modularity and reusability of code.
- - **Performance**: The staging tables and ETL process are optimized to handle large volumes of data with minimal performance overhead.
-
 # Development
 ## DB schemas
 **Fact Table**
- 
+
  1. **songplays** - records in event data associated with song plays i.e. records with page `NextSong`
     - *songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent*
 
