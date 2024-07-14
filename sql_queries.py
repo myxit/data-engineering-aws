@@ -30,11 +30,11 @@ staging_events_table_create= ("""
         location            TEXT,
         method              TEXT,
         page                TEXT,
-        registration        TIMESTAMP,
+        registration        BIGINT,
         session_id          BIGINT,
         song                TEXT,
         status              INTEGER,
-        ts                  TIMESTAMP NOT NULL,
+        ts                  BIGINT NOT NULL,
         user_agent          TEXT,
         user_id             INTEGER
     )
@@ -238,6 +238,7 @@ time_table_insert = ("""
         date_part(hour, start_time) as hour,
         date_part(day, start_time) as day,
         date_part(week, start_time) as week,
+        date_part(month, start_time) as month,
         date_part(year, start_time) as year,
         date_part(weekday, start_time) as weekday            
     from songplay 
